@@ -1,0 +1,10 @@
+certifi==2026.7.22
+charset-normalizer==3.4.9
+confluent-kafka==2.15.0
+idna==3.18
+psycopg2-binary==2.9.12
+py4j==0.10.9.9
+pyspark==4.2.0
+python-dotenv==1.2.2
+requests==2.34.2
+urllib3==2.7.0

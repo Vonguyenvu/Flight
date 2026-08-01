@@ -1,0 +1,18 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: flight_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Vongvu2694
+      POSTGRES_DB: flight_db
+    ports:
+      - "5432:5432"   # dùng 5433 để tránh đụng Postgres khác (vd project Olist) đang chạy 5432
+    volumes:
+      - flight_pg_data:/var/lib/postgresql/data
+ 
+volumes:
+  flight_pg_data:
+ 
