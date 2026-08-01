@@ -1,8 +1,8 @@
+env/
 .env
-.venv/
+credentials.json
 __pycache__/
 *.pyc
 checkpoints/
 spark-warehouse/
 *.log
- 
