@@ -47,7 +47,7 @@ POSTGRES_DB = os.getenv("POSTGRES_DB", "flight_db")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "flight_user")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "flight_pass")
 
-POSTGRES_JDBC_URL = f"jdbc:postgresql://{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+POSTGRES_URL = f"jdbc:postgresql://{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 postgres_properties = {
     "user": POSTGRES_USER,
@@ -69,7 +69,7 @@ def validate_config():
             missing.append(name)
     if missing:
         raise ValueError(f"Thiếu biến môi trường trong .env: {', '.join(missing)}")
-    print("Config OK — Kafka:", KAFKA_BOOTSTRAP_SERVERS, "| Postgres:", POSTGRES_JDBC_URL)
+    print("Config OK — Kafka:", KAFKA_BOOTSTRAP_SERVERS, "| Postgres:", POSTGRES_URL)
 
 
 if __name__ == "__main__":

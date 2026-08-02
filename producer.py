@@ -2,6 +2,7 @@ import json
 import logging
 import time
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import requests
 from confluent_kafka import Producer
 
@@ -54,13 +55,11 @@ def get_access_token():
     logger.info(f"New token acquired, valid for ~{expires_in}s.")
     return access_token
 
-# Bounding box quanh Hà Nội / Nội Bài để tiết kiệm credit OpenSky
-# (credit tính theo diện tích vùng query, vùng nhỏ = tốn ít credit hơn)
 BBOX = {
-    "lamin": 20.5,
-    "lomin": 105.3,
-    "lamax": 21.5,
-    "lomax": 106.3,
+    "lamin": 18,
+    "lomin": 103,
+    "lamax": 22.5,
+    "lomax": 108,
 }
 
 
@@ -73,7 +72,7 @@ def fetch_and_send():
     producer = get_producer()
     url = "https://opensky-network.org/api/states/all"
 
-    logger.info(f"Fetching flights near Hanoi, sending to topic: {KAFKA_TOPIC}")
+    logger.info(f"Fetching flights, sending to topic: {KAFKA_TOPIC}")
 
     try:
         token = get_access_token()
@@ -91,13 +90,14 @@ def fetch_and_send():
             logger.warning("No flight data received in this bounding box.")
             return
 
-        fetch_time = datetime.now(timezone.utc).isoformat()
+        fetch_time = datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).strftime("%Y-%m-%d %H:%M:%S")
 
         for s in states:
             payload = {
                 "event_time": fetch_time,
                 "icao24": s[0],
                 "callsign": s[1].strip() if s[1] else None,
+                "origin_country": s[2],
                 "longitude": s[5],
                 "latitude": s[6],
                 "altitude": s[7],
@@ -117,6 +117,21 @@ def fetch_and_send():
         raise
 
 
+def run_forever(interval_seconds=30):
+    """Chạy liên tục, gọi API mỗi interval_seconds giây cho tới khi Ctrl+C."""
+    logger.info(f"Starting continuous polling every {interval_seconds}s. Press Ctrl+C to stop.")
+    while True:
+        try:
+            fetch_and_send()
+        except Exception as e:
+            # Không để 1 lần lỗi (network, API down...) làm chết cả vòng lặp
+            logger.error(f"Cycle failed, will retry next interval: {e}")
+        time.sleep(interval_seconds)
+
+
 if __name__ == "__main__":
     validate_config()
-    fetch_and_send()
+    run_forever(interval_seconds=30)
+    
+    
+    

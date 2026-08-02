@@ -1,10 +1,10 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 
-from config import POSTGRES_JDBC_URL, postgres_properties
+from config import POSTGRES_URL, postgres_properties
 
-SILVER_TABLE = "silver_flights"
-BRONZE_TABLE = "flight_states"
+SILVER_TABLE = "silver_transform"
+BRONZE_TABLE = "bronze_flights"
 
 
 def build_spark():
@@ -12,6 +12,7 @@ def build_spark():
         SparkSession.builder
         .appName("TransformSilverLocal")
         .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3")
+        .config("spark.sql.session.timeZone", "Asia/Ho_Chi_Minh")
         .getOrCreate()
     )
 
@@ -21,25 +22,29 @@ def main():
     spark.sparkContext.setLogLevel("WARN")
 
     bronze_df = spark.read.jdbc(
-        url=POSTGRES_JDBC_URL,
+        url=POSTGRES_URL,
         table=BRONZE_TABLE,
         properties=postgres_properties
     )
 
     silver_df = (
         bronze_df
-        .drop("id")  # id là BIGSERIAL chỉ có ở Bronze, Silver không có cột này
+        .drop("id")  
         .dropDuplicates(["icao24", "event_time"])
-        .filter(col("callsign").isNotNull())
+        .filter(col("icao24").isNotNull() & (col("icao24") != ""))
+        .filter(col("longitude").isNotNull() & col("latitude").isNotNull())
+        .filter(col("longitude").between(-180, 180) & col("latitude").between(-90, 90))
+        .filter(col("altitude").isNotNull() & (col("altitude") >= 0))
+        .filter(col("velocity").isNotNull() & (col("velocity") >= 0))
     )
 
     count = silver_df.count()
     print(f"Writing {count} rows to Silver table '{SILVER_TABLE}'")
 
     (silver_df.write
-        .option("truncate", "true")  # chỉ xóa data, giữ nguyên schema/index đã tạo qua schema.sql
+        .option("truncate", "true")
         .jdbc(
-            url=POSTGRES_JDBC_URL,
+            url=POSTGRES_URL,
             table=SILVER_TABLE,
             mode="overwrite",
             properties=postgres_properties
