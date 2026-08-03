@@ -6,7 +6,7 @@ Pipeline streaming theo dõi mật độ máy bay trong không phận miền B�
 
 ## 1. Mô tả dự án
 
-Dữ liệu vị trí máy bay theo thời gian thực chỉ cho biết 1 lát cắt tại 1 thời điểm — không có sẵn lịch sử. Để trả lời câu hỏi "Mật độ không phận tại khu vực thay đổi như thế nào theo thời gian?", cần liên tục thu thập và tích lũy dữ liệu theo dòng thời gian.
+Dữ liệu vị trí máy bay theo thời gian thực chỉ cho biết 1 lát cắt tại 1 thời điểm - không có sẵn lịch sử. Để trả lời câu hỏi "Mật độ không phận tại khu vực thay đổi như thế nào theo thời gian?", cần liên tục thu thập và tích lũy dữ liệu theo dòng thời gian.
 
 Dự án xây dựng pipeline thu thập dữ liệu này liên tục, xử lý theo thời gian thực, và tổng hợp số lượng máy bay xuất hiện trong khu vực theo từng khung giờ mỗi ngày.
 
@@ -18,7 +18,7 @@ Bounding box mặc định: khu vực miền Bắc Việt Nam và khu vực lân
 
 ## 2. Nguồn dữ liệu
 
-**[OpenSky Network API](https://opensky-network.org/)** — endpoint `All State Vectors`, xác thực qua OAuth2 (client credentials).
+**[OpenSky Network API](https://opensky-network.org/)** - endpoint `All State Vectors`, xác thực qua OAuth2 (client credentials).
 
 Trường dữ liệu sử dụng:
 
@@ -105,7 +105,7 @@ pip install -r requirements.txt
 
 ### 6.3. Tạo Kafka cluster (Confluent Cloud)
 
-1. Tạo tài khoản tại [confluent.cloud](https://confluent.cloud) (free tier)
+1. Tạo tài khoản tại [confluent.cloud](https://confluent.cloud) 
 2. Tạo 1 Kafka cluster (Basic)
 3. Tạo 1 topic (ví dụ `flights_data`)
 4. Tạo API Key/Secret cho cluster, lấy Bootstrap server URL
@@ -156,24 +156,24 @@ python config.py
 Mở **2 terminal riêng biệt**, chạy song song và để chạy liên tục:
 
 ```bash
-# Terminal 1 — thu thập dữ liệu liên tục, mỗi 30 giây
-python producer.py
+# Terminal 1 - thu thập dữ liệu liên tục, mỗi 30 giây
+python -m scripts.producer
 ```
 
 ```bash
-# Terminal 2 — xử lý stream, ghi vào Bronze, mỗi 30 giây
-python main_streaming.py
+# Terminal 2 - xử lý stream, ghi vào Bronze, mỗi 30 giây
+python -m scripts.streaming
 ```
 
-Dừng bằng `Ctrl+C` ở cả 2 terminal khi cần tạm nghỉ. Dữ liệu đã ghi được giữ nguyên; chạy lại vào lần sau sẽ tiếp tục tích lũy (append), không mất dữ liệu cũ — miễn không xóa thư mục `checkpoints/`.
+Dừng bằng `Ctrl+C` ở cả 2 terminal khi cần tạm nghỉ. Dữ liệu đã ghi được giữ nguyên; chạy lại vào lần sau sẽ tiếp tục tích lũy (append), không mất dữ liệu cũ - miễn không xóa thư mục `checkpoints/`.
 
 ### 7.2. Chạy tầng Silver và Gold
 
 Sau khi đã tích lũy đủ dữ liệu (khuyến nghị để `producer.py`/`streaming.py` chạy tối thiểu vài giờ để có đủ nhiều khung giờ khác nhau):
 
 ```bash
-python transform.py
-python analysis.py
+python -m scripts.transform
+python -m scripts.analysis
 ```
 
 Mỗi lần chạy, Silver và Gold sẽ được overwrite lại dựa trên toàn bộ dữ liệu Bronze hiện có.
