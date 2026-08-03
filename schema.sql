@@ -11,6 +11,5 @@ CREATE TABLE bronze_flights (
     velocity REAL                                   -- [9] Tốc độ (m/s)
 );
  
--- Tạo Index tăng tốc query theo thời gian và mã máy bay
 CREATE INDEX idx_flight_icao24 ON bronze_flights(icao24);
 CREATE INDEX idx_flight_event_time ON bronze_flights(event_time);

@@ -10,7 +10,6 @@ from config import kafka_spark_options, POSTGRES_URL, postgres_properties, valid
 CHECKPOINT_PATH = "./checkpoints/bronze_flights"
 BRONZE_TABLE = "bronze_flights"
 
-# Khớp đúng cấu trúc bảng flight_states trong schema.sql
 flight_schema = StructType([
     StructField("event_time", StringType(), True), 
     StructField("icao24", StringType(), True),
@@ -78,7 +77,7 @@ def main():
         .writeStream
         .foreachBatch(write_batch_to_postgres)
         .option("checkpointLocation", CHECKPOINT_PATH)
-        .trigger(processingTime="30 seconds")   # chạy liên tục, xử lý batch mới mỗi 30s
+        .trigger(processingTime="30 seconds")  
         .start()
     )
 

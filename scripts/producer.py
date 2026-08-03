@@ -21,7 +21,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("FlightProducer")
 
-# Cache token trong bộ nhớ để không xin token mới mỗi lần gọi
 _token_cache = {"access_token": None, "expires_at": 0}
 
 
@@ -118,7 +117,6 @@ def fetch_and_send():
 
 
 def run_forever(interval_seconds=30):
-    """Chạy liên tục, gọi API mỗi interval_seconds giây cho tới khi Ctrl+C."""
     logger.info(f"Starting continuous polling every {interval_seconds}s. Press Ctrl+C to stop.")
     while True:
         try:
