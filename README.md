@@ -36,7 +36,7 @@ Trường dữ liệu sử dụng:
 
 ## 3. Kiến trúc & luồng dữ liệu
 
-!(images/pipeline.png)
+![Pipeline dự án](images/pipeline.png)
 
 ```
 OpenSky API (OAuth2)
