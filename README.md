@@ -8,10 +8,13 @@ Pipeline streaming theo dõi mật độ máy bay trong không phận miền B�
 
 Dữ liệu vị trí máy bay theo thời gian thực chỉ cho biết 1 lát cắt tại 1 thời điểm — không có sẵn lịch sử. Để trả lời câu hỏi "Mật độ không phận tại khu vực thay đổi như thế nào theo thời gian?", cần liên tục thu thập và tích lũy dữ liệu theo dòng thời gian.
 
-Dự án xây dựng pipeline thu thập dữ liệu này liên tục, xử lý theo thời gian thực, và tổng hợp số lượng máy bay xuất hiện trong khu vực theo từng khung giờ mỗi ngày
+Dự án xây dựng pipeline thu thập dữ liệu này liên tục, xử lý theo thời gian thực, và tổng hợp số lượng máy bay xuất hiện trong khu vực theo từng khung giờ mỗi ngày.
 
+![Khu vực lựa chọn để thu thập dữ liệu](images/map.png)
+
+Bounding box mặc định: khu vực miền Bắc Việt Nam và khu vực lân cận (`lamin=18, lomin=103, lamax=22.5, lomax=108`).
 ---
-
+images
 ## 2. Nguồn dữ liệu
 
 **[OpenSky Network API](https://opensky-network.org/)** — endpoint `All State Vectors`, xác thực qua OAuth2 (client credentials).
@@ -29,12 +32,11 @@ Trường dữ liệu sử dụng:
 | `on_ground` | Trạng thái ở mặt đất |
 | `velocity` | Vận tốc (m/s) |
 
-
-Bounding box mặc định: khu vực miền Bắc Việt Nam và khu vực lân cận (`lamin=18, lomin=103, lamax=22.5, lomax=108`).
-
 ---
 
 ## 3. Kiến trúc & luồng dữ liệu
+
+!(images/pipeline.png)
 
 ```
 OpenSky API (OAuth2)
