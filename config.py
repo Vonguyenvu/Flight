@@ -17,7 +17,6 @@ KAFKA_API_KEY = os.getenv("KAFKA_API_KEY")
 KAFKA_API_SECRET = os.getenv("KAFKA_API_SECRET")
 KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "flights_data")
 
-# Dùng cho confluent_kafka Producer (producer.py)
 kafka_producer_conf = {
     'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS,
     'security.protocol': 'SASL_SSL',
@@ -27,7 +26,6 @@ kafka_producer_conf = {
     'client.id': 'local-producer'
 }
 
-# Dùng cho Spark Structured Streaming (main_streaming.py)
 kafka_spark_options = {
     "kafka.bootstrap.servers": KAFKA_BOOTSTRAP_SERVERS,
     "kafka.security.protocol": "SASL_SSL",
