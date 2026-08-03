@@ -76,13 +76,17 @@ OpenSky API (OAuth2)
 
 ## 4. Công nghệ sử dụng
 
+<div align="center">
+
 | Thành phần | Công nghệ |
 |---|---|
 | Ngôn ngữ | Python |
 | Message queue | Apache Kafka |
 | Xử lý stream | Apache Spark |
-| Database | PostgreSQL |
-| Xác thực nguồn dữ liệu | OAuth2 client credentials (OpenSky) |
+| Cơ sở dữ liệu | PostgreSQL |
+| Xác thực nguồn dữ liệu | OAuth2 client credentials (OpenSky)|
+
+<div>
 
 ---
 
