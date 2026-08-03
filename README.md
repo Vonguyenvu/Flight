@@ -13,8 +13,9 @@ Dự án xây dựng pipeline thu thập dữ liệu này liên tục, xử lý 
 ![Khu vực lựa chọn để thu thập dữ liệu](images/map.png)
 
 Bounding box mặc định: khu vực miền Bắc Việt Nam và khu vực lân cận (`lamin=18, lomin=103, lamax=22.5, lomax=108`).
+
 ---
-images
+
 ## 2. Nguồn dữ liệu
 
 **[OpenSky Network API](https://opensky-network.org/)** — endpoint `All State Vectors`, xác thực qua OAuth2 (client credentials).
@@ -37,36 +38,6 @@ Trường dữ liệu sử dụng:
 ## 3. Kiến trúc & luồng dữ liệu
 
 ![Pipeline dự án](images/pipeline.png)
-
-```
-OpenSky API (OAuth2)
-        │  poll mỗi 30s
-        ▼
-  producer.py ──────────► Kafka (Confluent Cloud, topic riêng)
-                                  │
-                                  ▼
-                             streaming.py
-                    (Spark Structured Streaming,
-                     trigger 30s, foreachBatch)
-                                  │
-                                  ▼
-                    PostgreSQL — bronze_flights
-                  (raw, append-only, có event_time)
-                                  │
-                                  ▼
-                            transform.py
-                (dedup, lọc data lỗi/thiếu, chuẩn hóa)
-                                  │
-                                  ▼
-                  PostgreSQL — silver_transform
-                                  │
-                                  ▼
-                             analysis.py
-                        (windowing theo giờ)
-                                  │
-                                  ▼
-                    PostgreSQL — gold_analysis
-```
 
 ### Các tầng dữ liệu (Medallion Architecture)
 

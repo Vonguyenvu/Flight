@@ -124,7 +124,6 @@ def run_forever(interval_seconds=30):
         try:
             fetch_and_send()
         except Exception as e:
-            # Không để 1 lần lỗi (network, API down...) làm chết cả vòng lặp
             logger.error(f"Cycle failed, will retry next interval: {e}")
         time.sleep(interval_seconds)
 
